@@ -1,12 +1,13 @@
-const axios = require("axios");
+/* eslint-disable prettier/prettier */
+const axios = require('axios');
 
 const nfcApi = axios.create({
-  baseURL: "https://nfc-api.onrender.com",
+  baseURL: 'https://nfc-api.onrender.com',
 });
 
 const getNfcData = async () => {
   try {
-    const response = await nfcApi.get("/users");
+    const response = await nfcApi.get('/users');
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'appel à l'API NFC:", error);
@@ -14,12 +15,12 @@ const getNfcData = async () => {
   }
 };
 
-const createNfcData = async (data) => {
+const createNfcData = async data => {
   try {
-    const response = await nfcApi.post("/users", data);
+    const response = await nfcApi.post('/users', data);
     return response.data;
   } catch (error) {
-    console.error("Erreur lors de la création de données NFC:", error);
+    console.error('Erreur lors de la création de données NFC:', error);
     throw error;
   }
 };
@@ -29,17 +30,17 @@ const updateNfcData = async (id, data) => {
     const response = await nfcApi.put(`/users/${id}`, data);
     return response.data;
   } catch (error) {
-    console.error("Erreur lors de la mise à jour des données NFC:", error);
+    console.error('Erreur lors de la mise à jour des données NFC:', error);
     throw error;
   }
 };
 
-const deleteNfcData = async (id) => {
+const deleteNfcData = async id => {
   try {
     const response = await nfcApi.delete(`/users/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Erreur lors de la suppression des données NFC:", error);
+    console.error('Erreur lors de la suppression des données NFC:', error);
     throw error;
   }
 };

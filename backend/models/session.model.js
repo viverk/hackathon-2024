@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const shortid = require("shortid");
+/* eslint-disable prettier/prettier */
+const mongoose = require('mongoose');
+const shortid = require('shortid');
 
 const sessionSchema = mongoose.Schema(
   {
@@ -20,7 +21,7 @@ const sessionSchema = mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-module.exports = mongoose.model("session", sessionSchema);
+module.exports = mongoose.model('session', sessionSchema);

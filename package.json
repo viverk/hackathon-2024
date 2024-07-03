@@ -7,16 +7,19 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "server": "nodemon ./backend/server.js"
   },
   "dependencies": {
+    "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.4.4",
     "nodemon": "^3.1.4",
     "react": "18.2.0",
     "react-native": "0.74.3",
-    "react-native-nfc-manager": "^3.15.0"
+    "react-native-nfc-manager": "^3.15.0",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

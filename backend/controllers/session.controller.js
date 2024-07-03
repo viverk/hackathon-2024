@@ -1,66 +1,98 @@
-const SessionModel = require("../models/session.model");
+/* eslint-disable prettier/prettier */
+const SessionModel = require('../models/session.model');
 
 module.exports.getSessions = async (req, res) => {
-  const sessions = await SessionModel.find();
-  res.status(200).json(sessions);
-};
-
-module.exports.setSessions = async (req, res) => {
-  if (!req.body.message) {
-    res.status(400).json({ message: "Merci d'ajouter un message" });
-  }
-
-  const post = await PostModel.create({
-    message: req.body.message,
-    author: req.body.author,
-  });
-  res.status(200).json(post);
-};
-
-module.exports.editPost = async (req, res) => {
-  const post = await PostModel.findById(req.params.id);
-
-  if (!post) {
-    res.status(400).json({ message: "Ce post n'existe pas" });
-  }
-
-  const updatePost = await PostModel.findByIdAndUpdate(post, req.body, {
-    new: true,
-  });
-
-  res.status(200).json(updatePost);
-};
-
-module.exports.deletePost = async (req, res) => {
-  const post = await PostModel.findById(req.params.id);
-
-  if (!post) {
-    res.status(400).json({ message: "Ce post n'existe pas" });
-  }
-  await post.deleteOne({ _id: post })
-  res.status(200).json("Message supprimé " + req.params.id);
-};
-
-module.exports.likePost = async (req, res) => {
   try {
-    await PostModel.findByIdAndUpdate(
-      req.params.id,
-      { $addToSet: { likers: req.body.userId } },
-      { new: true }
-    ).then((data) => res.status(200).send(data));
+    const sessions = await SessionModel.find();
+    res.status(200).json(sessions);
   } catch (err) {
-    res.status(400).json(err);
+    res.status(500).json({
+      message: 'Erreur lors de la récupération des sessions',
+      error: err.message,
+    });
   }
 };
 
-module.exports.dislikePost = async (req, res) => {
+module.exports.createSession = async (req, res) => {
+  if (!req.body.user_id) {
+    return res.status(400).json({message: "Merci d'ajouter l'utilisateur"});
+  } else if (!req.body.is_used) {
+    return res
+      .status(400)
+      .json({message: 'Merci de préciser si cette session est utilisée'});
+  }
+
   try {
-    await PostModel.findByIdAndUpdate(
-      req.params.id,
-      { $pull: { likers: req.body.userId } },
-      { new: true }
-    ).then((data) => res.status(200).send(data));
+    const session = await SessionModel.create({
+      user_id: req.body.user_id,
+      is_used: req.body.is_used,
+    });
+    res.status(200).json(session);
   } catch (err) {
-    res.status(400).json(err);
+    res.status(500).json({
+      message: 'Erreur lors de la création de la session',
+      error: err.message,
+    });
+  }
+};
+
+module.exports.editSession = async (req, res) => {
+  const session = await SessionModel.findById(req.params.id);
+
+  if (!session) {
+    return res.status(400).json({message: "Cette session n'existe pas"});
+  }
+
+  try {
+    const updatedSession = await SessionModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      },
+    );
+    res.status(200).json(updatedSession);
+  } catch (err) {
+    res.status(500).json({
+      message: 'Erreur lors de la mise à jour de la session',
+      error: err.message,
+    });
+  }
+};
+
+module.exports.deleteSession = async (req, res) => {
+  const session = await SessionModel.findById(req.params.id);
+
+  if (!session) {
+    return res.status(400).json({message: "Cette session n'existe pas"});
+  }
+
+  try {
+    await session.deleteOne({_id: req.params.id});
+    res.status(200).json({message: 'Session supprimée avec succès'});
+  } catch (err) {
+    res.status(500).json({
+      message: 'Erreur lors de la suppression de la session',
+      error: err.message,
+    });
+  }
+};
+
+module.exports.markSessionAsUsed = async (req, res) => {
+  try {
+    const session = await SessionModel.findByIdAndUpdate(
+      req.params.id,
+      {is_used: true},
+      {new: true},
+    );
+    if (!session) {
+      return res.status(400).json({message: "Cette session n'existe pas"});
+    }
+    res.status(200).json(session);
+  } catch (err) {
+    res.status(500).json({
+      message: 'Erreur lors de la mise à jour de la session',
+      error: err.message,
+    });
   }
 };
