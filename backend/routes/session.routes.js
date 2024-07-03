@@ -5,6 +5,7 @@ const sessionController = require('../controllers/session.controller');
 
 // Routes pour les sessions
 router.get('/', sessionController.getSessions);
+router.get('/:code', sessionController.getSessionByCode);
 router.post('/', sessionController.createSession);
 router.put('/:id', sessionController.editSession);
 router.delete('/:id', sessionController.deleteSession);

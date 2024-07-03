@@ -14,17 +14,8 @@ module.exports.getSessions = async (req, res) => {
 };
 
 module.exports.createSession = async (req, res) => {
-  if (!req.body.user_id) {
-    return res.status(400).json({message: "Merci d'ajouter l'utilisateur"});
-  } else if (!req.body.is_used) {
-    return res
-      .status(400)
-      .json({message: 'Merci de préciser si cette session est utilisée'});
-  }
-
   try {
     const session = await SessionModel.create({
-      user_id: req.body.user_id,
       is_used: req.body.is_used,
     });
     res.status(200).json(session);
@@ -92,6 +83,24 @@ module.exports.markSessionAsUsed = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: 'Erreur lors de la mise à jour de la session',
+      error: err.message,
+    });
+  }
+};
+
+module.exports.getSessionByCode = async (req, res) => {
+  try {
+    const {code} = req.params;
+    const session = await SessionModel.findOne({code: code, is_used: false});
+    if (!session) {
+      return res.status(400).json({
+        message: 'Aucune session trouvée avec ce code et is_used=false',
+      });
+    }
+    res.status(200).json({session_id: session._id});
+  } catch (err) {
+    res.status(500).json({
+      message: 'Erreur lors de la récupération de la session',
       error: err.message,
     });
   }
