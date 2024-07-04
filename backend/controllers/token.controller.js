@@ -76,8 +76,8 @@ module.exports.deleteToken = async (req, res) => {
 
 module.exports.getUserByToken = async (req, res) => {
   try {
-    const {token} = req.params;
-    const tokenDoc = await TokenModel.findOne({token});
+    const { token } = req.params;
+    const tokenDoc = await TokenModel.findOne({token: token});
 
     if (!tokenDoc) {
       return res.status(404).json({message: 'Token non trouvé'});

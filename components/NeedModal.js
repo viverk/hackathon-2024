@@ -1,15 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, Modal, Text, Pressable} from 'react-native';
-// import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const NeedModal = ({isVisible, children, onClose}) => {
   return (
     <Modal animationType="slide" transparent={true} visible={isVisible}>
       <View style={styles.modalContent}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Aide</Text>
-          <Pressable onPress={onClose}>
-            {/* <MaterialIcons name="close" color="#fff" size={22} /> */}
+          <Pressable style={styles.button} onPress={onClose}>
+            <Text style={styles.buttonText}>Fermer x</Text>
           </Pressable>
         </View>
         {children}
@@ -32,7 +30,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     height: '16%',
-    backgroundColor: '#464C55',
+    backgroundColor: '#fff',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     paddingHorizontal: 20,
@@ -44,4 +42,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  button: {
+    width: '100%'
+  },
+  buttonText: {
+    color: '#4b4b4b',
+    textAlign: 'right'
+  }
 });
