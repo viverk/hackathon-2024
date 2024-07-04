@@ -1,12 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, Image, SafeAreaView, StyleSheet } from 'react-native';
 import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager';
+import Need from "./components/Need";
+import NeedModal from "./components/NeedModal";
+import ModalContent from "./components/ModalContent";
 
 // Prépare le gestionnaire NFC
 NfcManager.start();
 
 const App = () => {
   const [hasNfc, setHasNFC] = useState(null);
+  const [tokenCard, setTokenCard] = useState('')
+  const [code, setCode] = useState('')
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
+
+  const onModalOpen = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleSubmit = () => {
+    if (tokenCard) {
+      try {
+        axios.post('/api/')
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log("scannez d'abord votre carte");
+    }
+  }
 
   useEffect(() => {
     const checkIsSupported = async () => {
@@ -36,6 +62,8 @@ const App = () => {
     try {
       await NfcManager.requestTechnology(NfcTech.Ndef);
       const tag = await NfcManager.getTag();
+      setTokenCard(tag)
+      onModalOpen()
       console.log(tag);
       alert(`Tag détecté : ${JSON.stringify(tag)}`);
     } catch (ex) {
@@ -65,13 +93,19 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.sectionContainer}>
-      <Text>Hello world</Text>
-      <TouchableOpacity style={[styles.btn, styles.btnScan]} onPress={readTag}>
-        <Text style={{ color: 'white' }}>Scan Tag</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.btn, styles.btnCancel]} onPress={cancelReadTag}>
-        <Text style={{ color: 'white' }}>Cancel Scan</Text>
-      </TouchableOpacity>
+      <View style={styles.container}>
+      <Text style={styles.text}>
+        Placer votre carte d'accès pour vous authentifier
+      </Text>
+      <Image style={styles.image} source={require("./assets/nfc-login.png")} onPress={readTag} />
+
+      <Need onPress={onModalOpen} />
+
+      <NeedModal isVisible={isModalVisible} onClose={onModalClose}>
+        <ModalContent code={code} setCode={setCode} handleSubmit={handleSubmit} />
+      </NeedModal>
+      {/* <StatusBar style="auto" /> */}
+    </View>
     </SafeAreaView>
   );
 };

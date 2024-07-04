@@ -1,11 +1,11 @@
 {
-  "name": "NFCTutorial",
+  "name": "nfcTutorial",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .js,.jsx",
     "start": "react-native start",
     "test": "jest",
     "server": "nodemon ./backend/server.js"
